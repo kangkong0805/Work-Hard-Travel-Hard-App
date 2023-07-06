@@ -1,15 +1,14 @@
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
 import { theme } from "./colors";
-import { useState } from "react";
+import styles from "./style";
 
 export default function App() {
   const [working, setWorking] = useState(true);
@@ -66,40 +65,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background,
-    paddingHorizontal: 20,
-  },
-  header: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    marginTop: 100,
-  },
-  btnText: {
-    fontSize: 38,
-    fontWeight: 600,
-  },
-  input: {
-    backgroundColor: "#fff",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 30,
-    marginVertical: 20,
-    fontSize: 18,
-  },
-  toDo: {
-    backgroundColor: theme.grey,
-    marginBottom: 10,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-  },
-  toDoText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-});
