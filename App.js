@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -20,14 +21,7 @@ export default function App() {
   const onChangeText = (payload) => setText(payload);
   const addToDo = () => {
     if (text === "") return;
-
-    // Object.assign(target, ...sources)
-    // Object.assign()은 sources에서 target으로 복사하고 target을 반환
-    const newToDos = Object.assign({}, toDos, {
-      [Date.now()]: { text, work: working },
-    });
-
-    // save to do
+    const newToDos = { ...toDos, [Date.now()]: { text, work: working } };
     setToDos(newToDos);
     setText("");
   };
@@ -60,7 +54,14 @@ export default function App() {
           placeholder={working ? "Add a To Do" : "Where do you want to go?"}
           style={styles.input}
           value={text}
-        ></TextInput>
+        />
+        <ScrollView>
+          {Object.keys(toDos).map((key) => (
+            <View key={key} style={styles.toDo}>
+              <Text style={{ color: "white" }}>{toDos[key].text}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -82,11 +83,23 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
   input: {
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
     fontSize: 18,
+  },
+  toDo: {
+    backgroundColor: theme.grey,
+    marginBottom: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+  },
+  toDoText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
