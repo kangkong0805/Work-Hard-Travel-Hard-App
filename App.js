@@ -2,32 +2,47 @@ import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
+  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
 import { theme } from "./colors";
+import { useState } from "react";
 
 export default function App() {
+  const [working, setWorking] = useState(true);
+  const [text, setText] = useState("");
+  const travel = () => setWorking(false);
+  const work = () => setWorking(true);
+  const onChangeText = (payload) => setText(payload);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.header}>
-        {/* 누르면 투명도 애니메이션 부여하는 컴포넌트*/}
-        <TouchableOpacity>
-          <Text style={styles.btnText}>Work</Text>
+        <TouchableOpacity onPress={work}>
+          <Text
+            style={{ ...styles.btnText, color: working ? "white" : theme.grey }}
+          >
+            Work
+          </Text>
         </TouchableOpacity>
-
-        {/* 누르면 강조 애니메이션 부여하는 컴포넌트*/}
-        <TouchableHighlight
-          underlayColor="red"
-          activeOpacity={0.2}
-          onPress={() => {
-            console.log("pressed");
-          }}
-        >
-          <Text style={styles.btnText}>Travel</Text>
-        </TouchableHighlight>
+        <TouchableOpacity onPress={travel}>
+          <Text
+            style={{ ...styles.btnText, color: working ? theme.grey : "white" }}
+          >
+            Travel
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View>
+        <TextInput
+          placeholder={working ? "Add a To Do" : "Where do you want to go?"}
+          style={styles.input}
+          onChangeText={onChangeText} // 텍스트 변환 이벤트 발생 시 실행
+          value={text}
+        ></TextInput>
       </View>
     </View>
   );
@@ -45,8 +60,15 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   btnText: {
-    color: "#fff",
     fontSize: 38,
     fontWeight: 600,
+  },
+  input: {
+    backgroundColor: "white",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginTop: 20,
+    fontSize: 18,
   },
 });
