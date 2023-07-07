@@ -11,7 +11,7 @@ import {
 import { theme } from "./colors";
 import styles from "./style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Fontisto } from "@expo/vector-icons";
+import { Fontisto, AntDesign } from "@expo/vector-icons";
 
 const STORAGE_KEY = "@toDos";
 const WORKING = "@working";
@@ -41,7 +41,10 @@ export default function App() {
 
   const addToDo = async () => {
     if (text === "") return;
-    const newToDos = { ...toDos, [Date.now()]: { text, working: working } };
+    const newToDos = {
+      ...toDos,
+      [Date.now()]: { text, working: working, check: false },
+    };
     setToDos(newToDos);
     await saveToDos(newToDos);
     setText("");
@@ -61,6 +64,19 @@ export default function App() {
         },
       },
     ]);
+  };
+
+  const changeCheck = async (key) => {
+    const newToDos = {
+      ...toDos,
+      [key]: {
+        text: toDos[key].text,
+        working: toDos[key].working,
+        check: !toDos[key].check,
+      },
+    };
+    setToDos(newToDos);
+    await saveToDos(newToDos);
   };
 
   const saveTheme = async () => {
@@ -116,10 +132,28 @@ export default function App() {
           {Object.keys(toDos).map((key) =>
             toDos[key].working === working ? (
               <View key={key} style={styles.toDo}>
-                <Text style={styles.toDoText}>{toDos[key].text}</Text>
-                <TouchableOpacity onPress={() => deleteToDo(key)}>
-                  <Fontisto name="trash" size={18} color={theme.grey} />
-                </TouchableOpacity>
+                <Text
+                  style={{
+                    ...styles.toDoText,
+                    textDecorationLine: toDos[key].check
+                      ? "line-through"
+                      : "none",
+                    color: toDos[key].check ? "#aaa" : "#fff",
+                  }}
+                >
+                  {toDos[key].text}
+                </Text>
+                <View style={styles.iconBox}>
+                  <AntDesign
+                    name={toDos[key].check ? "checksquareo" : "checksquare"}
+                    size={18}
+                    color="white"
+                    onPress={() => changeCheck(key)}
+                  />
+                  <TouchableOpacity onPress={() => deleteToDo(key)}>
+                    <Fontisto name="trash" size={18} color="red" />
+                  </TouchableOpacity>
+                </View>
               </View>
             ) : null
           )}
