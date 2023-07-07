@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 
   iconBox: {
     flexDirection: "row",
-    gap: 10,
+    gap: 15,
   },
 });
 
