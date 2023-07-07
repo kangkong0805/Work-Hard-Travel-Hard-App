@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Fontisto } from "@expo/vector-icons";
 
 const STORAGE_KEY = "@toDos";
+const WORKING = "@working";
 
 export default function App() {
   const [working, setWorking] = useState(true);
@@ -61,9 +62,27 @@ export default function App() {
       },
     ]);
   };
+
+  const saveTheme = async () => {
+    try {
+      await AsyncStorage.setItem(WORKING, String(working));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const loadTheme = async () => {
+    const w = await AsyncStorage.getItem(WORKING);
+    setWorking(w === "true");
+  };
+
   useEffect(() => {
     loadToDos();
+    loadTheme();
   }, []);
+  useEffect(() => {
+    saveTheme();
+  }, [working]);
 
   return (
     <View style={styles.container}>
