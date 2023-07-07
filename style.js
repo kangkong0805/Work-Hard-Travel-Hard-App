@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
   },
   toDoText: {
     color: "#fff",
