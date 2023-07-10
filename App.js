@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import {
   Alert,
+  Platform,
   ScrollView,
   Text,
   TextInput,
@@ -37,7 +38,7 @@ export default function App() {
 
   const loadToDos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
-    setToDos(JSON.parse(s));
+    if (!!s) setToDos(JSON.parse(s));
   };
 
   const addToDo = async () => {
@@ -51,20 +52,29 @@ export default function App() {
     setText("");
   };
 
+  const deleteItem = (key) => {
+    const newToDos = { ...toDos };
+    delete newToDos[key];
+    setToDos(newToDos);
+    saveToDos(newToDos);
+  };
+
   const deleteToDo = async (key) => {
-    Alert.alert("Delete To Do", "Are you sure?", [
-      { text: "Cancel" },
-      {
-        text: "I'm Sure",
-        style: "destructive",
-        onPress: () => {
-          const newToDos = { ...toDos };
-          delete newToDos[key];
-          setToDos(newToDos);
-          saveToDos(newToDos);
+    if (Platform.OS === "web") {
+      const ok = confirm("Do you want to delete this To Do");
+      if (!!ok) {
+        deleteItem(key);
+      }
+    } else {
+      Alert.alert("Delete To Do", "Are you sure?", [
+        { text: "Cancel" },
+        {
+          text: "I'm Sure",
+          style: "destructive",
+          onPress: () => deleteItem(key),
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   const changeState = async (id, state) => {
